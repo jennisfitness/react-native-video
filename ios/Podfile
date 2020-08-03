@@ -6,7 +6,7 @@ target 'RCTVideo' do
   use_frameworks!
 
   # Pods for RCTVideo
-  pod "Mux-Stats-Core", "~> 2.0"
+  pod 'Mux-Stats-AVPlayer', '~>1.3.0'
 end
 
 target 'RCTVideo-tvOS' do
@@ -14,5 +14,5 @@ target 'RCTVideo-tvOS' do
   use_frameworks!
 
   # Pods for RCTVideo-tvOS
-  pod "Mux-Stats-Core", "~> 2.0"
+  pod 'Mux-Stats-AVPlayer', '~>1.3.0'
 end
