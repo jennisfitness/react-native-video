@@ -96,7 +96,7 @@ static int const RCTVideoUnset = -1;
 {
   if ((self = [super init])) {
     _eventDispatcher = eventDispatcher;
-	  _automaticallyWaitsToMinimizeStalling = YES;
+    _automaticallyWaitsToMinimizeStalling = YES;
     _playbackRateObserverRegistered = NO;
     _isExternalPlaybackActiveObserverRegistered = NO;
     _playbackStalled = NO;
@@ -329,6 +329,9 @@ static int const RCTVideoUnset = -1;
 
 - (void)addPlayerItemObservers
 {
+  if (_playerItemObserversSet) {
+    [self removePlayerItemObservers];
+  }
   AVPlayerItem *playerItem = [_player currentItem];
   if (playerItem != nil) {
     [playerItem addObserver:self forKeyPath:statusKeyPath options:0 context:nil];
@@ -377,17 +380,19 @@ static int const RCTVideoUnset = -1;
 - (void)setSrc:(NSDictionary *)source
 {
   _source = source;
-  [self removePlayerLayer];
-  [self removePlayerTimeObserver];
-  [self removePlayerItemObservers];
   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t) 0), dispatch_get_main_queue(), ^{
     
     // perform on next run loop, otherwise other passed react-props may not be set
     [self playerItemForSource:source withCallback:^(AVPlayerItem * playerItem) {
+      [self removePlayerLayer];
+      [self removePlayerTimeObserver];
+      [self removePlayerItemObservers];
+      
       if (_player == nil) {
         [self createPlayer:playerItem];
       } else {
         [_player replaceCurrentItemWithPlayerItem:playerItem];
+        [self addPlayerTimeObserver];
       }
       [self setPreferredForwardBufferDuration:_preferredForwardBufferDuration];
       [self addPlayerItemObservers];
