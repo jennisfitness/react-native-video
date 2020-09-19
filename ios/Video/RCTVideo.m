@@ -27,6 +27,7 @@ static int const RCTVideoUnset = -1;
   AVPlayer *_player;
   NSDictionary *_source;
   BOOL _playerItemObserversSet;
+  BOOL _playerItemNotificationCenterObserversSet;
   BOOL _playerBufferEmpty;
   AVPlayerLayer *_playerLayer;
   BOOL _playerLayerObserverSet;
@@ -95,6 +96,8 @@ static int const RCTVideoUnset = -1;
 - (instancetype)initWithEventDispatcher:(RCTEventDispatcher *)eventDispatcher
 {
   if ((self = [super init])) {
+    _playerItemObserversSet = NO;
+    _playerItemNotificationCenterObserversSet = NO;
     _eventDispatcher = eventDispatcher;
     _automaticallyWaitsToMinimizeStalling = YES;
     _playbackRateObserverRegistered = NO;
@@ -355,6 +358,12 @@ static int const RCTVideoUnset = -1;
     [playerItem removeObserver:self forKeyPath:timedMetadata];
     _playerItemObserversSet = NO;
   }
+  if (_playerItemNotificationCenterObserversSet && playerItem != nil) {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                  name:AVPlayerItemDidPlayToEndTimeNotification
+                                                object:playerItem];
+    _playerItemNotificationCenterObserversSet = NO;
+  }
 }
 
 #pragma mark - Player and source
@@ -398,6 +407,7 @@ static int const RCTVideoUnset = -1;
       [self addPlayerItemObservers];
       [self setFilter:_filterName];
       [self setMaxBitRate:_maxBitRate];
+      [self applyModifiers];
 
       //Perform on next run loop, otherwise onVideoLoadStart is nil
       if (self.onVideoLoadStart) {
@@ -764,13 +774,16 @@ static int const RCTVideoUnset = -1;
 - (void)attachListeners
 {
   // listen for end of file
-  [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                  name:AVPlayerItemDidPlayToEndTimeNotification
-                                                object:[_player currentItem]];
+  if (_playerItemNotificationCenterObserversSet) {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVPlayerItemDidPlayToEndTimeNotification
+                                                  object:[_player currentItem]];
+  }
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(playerItemDidReachEnd:)
                                                name:AVPlayerItemDidPlayToEndTimeNotification
                                              object:[_player currentItem]];
+  _playerItemNotificationCenterObserversSet = YES;
   
   [[NSNotificationCenter defaultCenter] removeObserver:self
                                                   name:AVPlayerItemPlaybackStalledNotification
