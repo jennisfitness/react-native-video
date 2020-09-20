@@ -390,12 +390,12 @@ static int const RCTVideoUnset = -1;
 {
   _source = source;
   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t) 0), dispatch_get_main_queue(), ^{
+    [self removePlayerLayer];
+    [self removePlayerTimeObserver];
+    [self removePlayerItemObservers];
     
     // perform on next run loop, otherwise other passed react-props may not be set
     [self playerItemForSource:source withCallback:^(AVPlayerItem * playerItem) {
-      [self removePlayerLayer];
-      [self removePlayerTimeObserver];
-      [self removePlayerItemObservers];
       
       if (_player == nil) {
         [self createPlayer:playerItem];
@@ -1636,9 +1636,9 @@ static int const RCTVideoUnset = -1;
     [_player removeObserver:self forKeyPath:externalPlaybackActive context:nil];
     _isExternalPlaybackActiveObserverRegistered = NO;
   }
-  _player = nil;
-  
   [self removePlayerLayer];
+  [self removePlayerTimeObserver];
+  [self removePlayerItemObservers];
   
   [_playerViewController.contentOverlayView removeObserver:self forKeyPath:@"frame"];
   [_playerViewController removeObserver:self forKeyPath:readyForDisplayKeyPath];
@@ -1647,11 +1647,10 @@ static int const RCTVideoUnset = -1;
   _playerViewController.player = nil;
   _playerViewController = nil;
   
-  [self removePlayerTimeObserver];
-  [self removePlayerItemObservers];
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
   
   _eventDispatcher = nil;
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  _player = nil;
   
   [super removeFromSuperview];
 }
