@@ -1086,6 +1086,12 @@ static int const RCTVideoUnset = -1;
 
 - (void)applyModifiers
 {
+  AVPlayerItem *video = [_player currentItem];
+  // Skip applying modifiers if the video is not ready to avoid freezing
+  if (video == nil || video.status != AVPlayerItemStatusReadyToPlay) {
+   return;
+  }
+  
   if (_muted) {
     if (!_controls) {
       [_player setVolume:0];
