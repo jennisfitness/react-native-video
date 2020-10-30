@@ -70,6 +70,7 @@ static int const RCTVideoUnset = -1;
   NSDictionary * _selectedAudioTrack;
   BOOL _playbackStalled;
   BOOL _playInBackground;
+  BOOL _videoPlayerNeedsReattaching;
   BOOL _preventsDisplaySleepDuringVideoPlayback;
   float _preferredForwardBufferDuration;
   BOOL _playWhenInactive;
@@ -115,6 +116,7 @@ static int const RCTVideoUnset = -1;
     _controls = NO;
     _playerBufferEmpty = YES;
     _playInBackground = false;
+    _videoPlayerNeedsReattaching = false;
     _preventsDisplaySleepDuringVideoPlayback = true;
     _preferredForwardBufferDuration = 0.0f;
     _allowsExternalPlayback = YES;
@@ -236,6 +238,7 @@ static int const RCTVideoUnset = -1;
 {
   if (_playInBackground) {
     // Needed to play sound in background. See https://developer.apple.com/library/ios/qa/qa1668/_index.html
+    _videoPlayerNeedsReattaching = true;
     [_playerLayer setPlayer:nil];
     [_playerViewController setPlayer:nil];
   }
@@ -244,7 +247,8 @@ static int const RCTVideoUnset = -1;
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
   [self applyModifiers];
-  if (_playInBackground) {
+  if (_videoPlayerNeedsReattaching) {
+    _videoPlayerNeedsReattaching = false;
     [_playerLayer setPlayer:_player];
     [_playerViewController setPlayer:_player];
   }
