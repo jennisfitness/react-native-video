@@ -724,7 +724,6 @@ class ReactExoplayerView extends FrameLayout implements
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         String text = "onStateChanged: playWhenReady=" + playWhenReady + ", playbackState=";
-        eventEmitter.playbackRateChange(playWhenReady || playbackState == Player.STATE_READY ? 1.0f : 0.0f);
         switch (playbackState) {
             case Player.STATE_IDLE:
                 text += "idle";
@@ -743,6 +742,9 @@ class ReactExoplayerView extends FrameLayout implements
             case Player.STATE_READY:
                 text += "ready";
                 eventEmitter.ready();
+                if (playWhenReady) {
+                    eventEmitter.playbackRateChange(1.0f);
+                }
                 onBuffering(false);
                 startProgressHandler();
                 videoLoaded();
