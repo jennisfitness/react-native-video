@@ -744,6 +744,8 @@ class ReactExoplayerView extends FrameLayout implements
                 eventEmitter.ready();
                 if (playWhenReady) {
                     eventEmitter.playbackRateChange(1.0f);
+                } else {
+                    eventEmitter.playbackRateChange(0.0f);
                 }
                 onBuffering(false);
                 startProgressHandler();
