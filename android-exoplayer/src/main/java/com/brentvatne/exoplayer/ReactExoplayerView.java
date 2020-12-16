@@ -517,7 +517,11 @@ class ReactExoplayerView extends FrameLayout implements
                         mediaDataSourceFactory
                 ).setLoadErrorHandlingPolicy(
                         config.buildLoadErrorHandlingPolicy(minLoadRetryCount)
-                ).setDrmSessionManager(drmSessionManager).createMediaSource(uri);
+                ).setDrmSessionManager(
+                        drmSessionManager
+                )
+                .setAllowChunklessPreparation(true)
+                .createMediaSource(uri);
             case C.TYPE_OTHER:
                 return new ProgressiveMediaSource.Factory(
                         mediaDataSourceFactory
