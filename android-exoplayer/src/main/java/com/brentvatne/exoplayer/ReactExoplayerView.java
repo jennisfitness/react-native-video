@@ -128,10 +128,16 @@ class ReactExoplayerView extends FrameLayout implements
     private int maxBitRate = 0;
     private long seekTime = C.TIME_UNSET;
 
-    private int minBufferMs = DefaultLoadControl.DEFAULT_MIN_BUFFER_MS;
-    private int maxBufferMs = DefaultLoadControl.DEFAULT_MAX_BUFFER_MS;
-    private int bufferForPlaybackMs = DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_MS;
-    private int bufferForPlaybackAfterRebufferMs = DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS;
+    // private int minBufferMs = DefaultLoadControl.DEFAULT_MIN_BUFFER_MS;
+    // private int maxBufferMs = DefaultLoadControl.DEFAULT_MAX_BUFFER_MS;
+    // private int bufferForPlaybackMs = DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_MS;
+    // private int bufferForPlaybackAfterRebufferMs = DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS;
+
+    // new defaults from Nuno and Matt
+    private int minBufferMs = 15000;
+    private int maxBufferMs = 30000;
+    private int bufferForPlaybackMs = 1500;
+    private int bufferForPlaybackAfterRebufferMs = 3000;
 
     private Handler mainHandler;
 
