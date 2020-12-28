@@ -127,6 +127,7 @@ class ReactExoplayerView extends FrameLayout implements
     private int minLoadRetryCount = 3;
     private int maxBitRate = 0;
     private long seekTime = C.TIME_UNSET;
+    private boolean firstTimeReady = true;
 
     // private int minBufferMs = DefaultLoadControl.DEFAULT_MIN_BUFFER_MS;
     // private int maxBufferMs = DefaultLoadControl.DEFAULT_MAX_BUFFER_MS;
@@ -314,13 +315,16 @@ class ReactExoplayerView extends FrameLayout implements
      * Initializing Player control
      */
     private void initializePlayerControl() {
+        Boolean firstInitializeCall = playerControlView == null;
         if (playerControlView == null) {
             playerControlView = new PlayerControlView(getContext());
         }
 
         // Setting the player for the playerControlView
         playerControlView.setPlayer(player);
-        playerControlView.show();
+        if (firstInitializeCall) {
+            playerControlView.show();
+        }
         playPauseControlContainer = playerControlView.findViewById(R.id.exo_play_pause_container);
 
         // Invoking onClick event for exoplayerView
@@ -377,7 +381,7 @@ class ReactExoplayerView extends FrameLayout implements
         if (indexOfPC != -1) {
             removeViewAt(indexOfPC);
         }
-        addView(playerControlView, 1, layoutParams);
+        addView(playerControlView, -1, layoutParams);
     }
 
     /**
@@ -766,7 +770,8 @@ class ReactExoplayerView extends FrameLayout implements
                 startProgressHandler();
                 videoLoaded();
                 // Setting the visibility for the playerControlView
-                if (playerControlView != null) {
+                if (playerControlView != null && firstTimeReady) {
+                    firstTimeReady = false;
                     playerControlView.show();
                 }
                 setKeepScreenOn(preventsDisplaySleepDuringVideoPlayback);
