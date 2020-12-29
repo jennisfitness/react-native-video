@@ -43,6 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:layout_marginLeft="48dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -71,6 +72,9 @@
             android:paddingRight="4dp"
             android:includeFontPadding="false"
             android:textColor="#FFBEBEBE"/>
+
+        <ImageButton android:id="@id/exo_fullscreen"
+            style="@style/ExoStyledControls.Button.Bottom.FullScreen"/>
     </LinearLayout>
 
 </LinearLayout>

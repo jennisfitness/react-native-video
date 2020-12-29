@@ -1,8 +1,10 @@
 package com.brentvatne.exoplayer;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Handler;
@@ -356,6 +358,15 @@ class ReactExoplayerView extends FrameLayout implements
             }
         });
 
+        // Handling entering fullscreen
+        ImageButton fullScreenButton = playerControlView.findViewById(R.id.exo_fullscreen);
+        fullScreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFullscreen(!isFullscreen);
+            }
+        });
+
         // Invoking onPlayerStateChanged event for Player
         eventListener = new Player.EventListener() {
             @Override
@@ -650,9 +661,6 @@ class ReactExoplayerView extends FrameLayout implements
     }
 
     private void onStopPlayback() {
-        if (isFullscreen) {
-            setFullscreen(false);
-        }
         audioManager.abandonAudioFocus(this);
     }
 
@@ -1308,6 +1316,7 @@ class ReactExoplayerView extends FrameLayout implements
         }
         Window window = activity.getWindow();
         View decorView = window.getDecorView();
+        ActionBar actionBar = activity.getActionBar();
         int uiOptions;
         if (isFullscreen) {
             if (Util.SDK_INT >= 19) { // 4.4+
@@ -1319,12 +1328,20 @@ class ReactExoplayerView extends FrameLayout implements
                         | SYSTEM_UI_FLAG_FULLSCREEN;
             }
             eventEmitter.fullscreenWillPresent();
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             decorView.setSystemUiVisibility(uiOptions);
+            if (actionBar != null) {
+                actionBar.hide();
+            }
             eventEmitter.fullscreenDidPresent();
         } else {
             uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
             eventEmitter.fullscreenWillDismiss();
             decorView.setSystemUiVisibility(uiOptions);
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            if (actionBar != null) {
+                actionBar.show();
+            }
             eventEmitter.fullscreenDidDismiss();
         }
     }
