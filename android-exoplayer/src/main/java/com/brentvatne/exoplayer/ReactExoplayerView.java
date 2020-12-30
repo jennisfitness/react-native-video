@@ -137,8 +137,8 @@ class ReactExoplayerView extends FrameLayout implements
     // private int bufferForPlaybackAfterRebufferMs = DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS;
 
     // new defaults from Nuno and Matt
-    private int minBufferMs = 15000;
-    private int maxBufferMs = 30000;
+    private int minBufferMs = 30000;
+    private int maxBufferMs = 60000;
     private int bufferForPlaybackMs = 1500;
     private int bufferForPlaybackAfterRebufferMs = 3000;
 
