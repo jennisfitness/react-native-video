@@ -356,10 +356,26 @@ static int const RCTVideoUnset = -1;
 {
   AVPlayerItem *playerItem = [_player currentItem];
   if (_playerItemObserversSet && playerItem != nil) {
-    [playerItem removeObserver:self forKeyPath:statusKeyPath];
-    [playerItem removeObserver:self forKeyPath:playbackBufferEmptyKeyPath];
-    [playerItem removeObserver:self forKeyPath:playbackLikelyToKeepUpKeyPath];
-    [playerItem removeObserver:self forKeyPath:timedMetadata];
+    @try {
+      [playerItem removeObserver:self forKeyPath:statusKeyPath];
+    } @catch (NSException *exception) {
+      // observer doesn't exist, do nothing
+    }
+    @try {
+      [playerItem removeObserver:self forKeyPath:playbackBufferEmptyKeyPath];
+    } @catch (NSException *exception) {
+      // observer doesn't exist, do nothing
+    }
+    @try {
+      [playerItem removeObserver:self forKeyPath:playbackLikelyToKeepUpKeyPath];
+    } @catch (NSException *exception) {
+      // observer doesn't exist, do nothing
+    }
+    @try {
+      [playerItem removeObserver:self forKeyPath:timedMetadata];
+    } @catch (NSException *exception) {
+      // observer doesn't exist, do nothing
+    }
     _playerItemObserversSet = NO;
   }
   if (_playerItemNotificationCenterObserversSet && playerItem != nil) {
