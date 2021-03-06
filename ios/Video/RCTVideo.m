@@ -966,6 +966,9 @@ static int const RCTVideoUnset = -1;
 
 - (void)setPaused:(BOOL)paused
 {
+  if (_paused == paused) {
+    return;
+  }
   if (paused) {
     [_player pause];
     [_player setRate:0.0];
