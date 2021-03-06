@@ -1229,6 +1229,9 @@ class ReactExoplayerView extends FrameLayout implements
     }
 
     public void setPausedModifier(boolean paused) {
+        if (isPaused == paused) {
+            return;
+        }
         isPaused = paused;
         if (player != null) {
             if (!paused) {
