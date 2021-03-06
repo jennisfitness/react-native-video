@@ -45,6 +45,7 @@ RCT_EXPORT_VIEW_PROPERTY(currentTime, float);
 RCT_EXPORT_VIEW_PROPERTY(fullscreen, BOOL);
 RCT_EXPORT_VIEW_PROPERTY(fullscreenAutorotate, BOOL);
 RCT_EXPORT_VIEW_PROPERTY(fullscreenOrientation, NSString);
+RCT_EXPORT_VIEW_PROPERTY(exitsFullScreenWhenPlaybackEnds, BOOL);
 RCT_EXPORT_VIEW_PROPERTY(filter, NSString);
 RCT_EXPORT_VIEW_PROPERTY(filterEnabled, BOOL);
 RCT_EXPORT_VIEW_PROPERTY(progressUpdateInterval, float);

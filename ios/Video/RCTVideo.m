@@ -60,6 +60,7 @@ static int const RCTVideoUnset = -1;
   float _rate;
   float _maxBitRate;
 
+  BOOL _exitsFullScreenWhenPlaybackEnds;
   BOOL _automaticallyWaitsToMinimizeStalling;
   BOOL _muted;
   BOOL _paused;
@@ -1102,6 +1103,17 @@ static int const RCTVideoUnset = -1;
   }
 }
 
+- (void)setExitsFullScreenWhenPlaybackEnds:(BOOL)exits
+{
+  _exitsFullScreenWhenPlaybackEnds = exits;
+  if (_playerViewController != nil) {;
+    if (@available(iOS 11.0, *)) {
+      _playerViewController.exitsFullScreenWhenPlaybackEnds = exits;
+    } else {
+      // ignore
+    }
+  }
+}
 
 - (void)applyModifiers
 {
@@ -1135,6 +1147,7 @@ static int const RCTVideoUnset = -1;
   [self setPaused:_paused];
   [self setControls:_controls];
   [self setAllowsExternalPlayback:_allowsExternalPlayback];
+  [self setExitsFullScreenWhenPlaybackEnds:_exitsFullScreenWhenPlaybackEnds];
 }
 
 - (void)setRepeat:(BOOL)repeat {
