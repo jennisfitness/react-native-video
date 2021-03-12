@@ -231,8 +231,7 @@ static int const RCTVideoUnset = -1;
 {
   if (_playInBackground || _playWhenInactive || _paused) return;
   
-  [_player pause];
-  [_player setRate:0.0];
+  [self setPaused:true];
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
@@ -1019,7 +1018,7 @@ static int const RCTVideoUnset = -1;
     BOOL wasPaused = _paused;
     
     if (CMTimeCompare(current, cmSeekTime) != 0) {
-      if (!wasPaused) [_player pause];
+      if (!wasPaused) [self setPaused:true];
       [_player seekToTime:cmSeekTime toleranceBefore:tolerance toleranceAfter:tolerance completionHandler:^(BOOL finished) {
         if (!_timeObserver) {
           [self addPlayerTimeObserver];
